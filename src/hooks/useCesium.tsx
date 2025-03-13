@@ -10,7 +10,7 @@ interface CesiumViewerProps {
 const CesiumViewer = forwardRef<Viewer, CesiumViewerProps>(
     ({ options = {}, className = '' }, ref) => {
         const containerRef = useRef<HTMLDivElement>(null)
-        const viewerRef = useRef<Viewer>()
+        const viewerRef = useRef<Viewer>(null)
 
         useEffect(() => {
             if (containerRef.current) {

@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import CesiumViewer from './hooks/useCesium'
 
 export default function App() {
