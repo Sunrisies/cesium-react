@@ -4,11 +4,11 @@ import cesium from 'vite-plugin-cesium'
 import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from "rollup-plugin-visualizer"
 import viteCompression from "vite-plugin-compression"
-// import { TanStackRouterVite } from "@tanstack/router-plugin/vite"
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite"
 import path from "node:path"
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), cesium(), tailwindcss()],
+  plugins: [react(), cesium(), tailwindcss(), TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),],
   server: {
     open: true,
   },
