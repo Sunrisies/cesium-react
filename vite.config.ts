@@ -3,12 +3,11 @@ import react from '@vitejs/plugin-react'
 import cesium from 'vite-plugin-cesium'
 import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from "rollup-plugin-visualizer"
-import viteCompression from "vite-plugin-compression"
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite"
 import path from "node:path"
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), cesium(), tailwindcss(), TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),],
+  plugins: [react(), cesium(), tailwindcss(), TanStackRouterVite({ target: 'react', autoCodeSplitting: true })],
   server: {
     open: true,
   },
@@ -47,15 +46,7 @@ export default defineConfig({
           filename: "stats.html", // 输出文件的名称
           gzipSize: true, // 显示gzip后的大小
           brotliSize: true, // 显示brotli压缩后的大小
-        }),
-        viteCompression({
-          verbose: true, // 是否在控制台中输出压缩结果
-          disable: false,
-          threshold: 10240, // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩，以免适得其反
-          algorithm: "gzip", // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
-          ext: ".gz",
-          deleteOriginFile: false, // 源文件压缩后是否删除
-        }),
+        })
       ],
     },
     terserOptions: {
