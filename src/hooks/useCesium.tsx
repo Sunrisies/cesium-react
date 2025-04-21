@@ -1,18 +1,17 @@
-import { useEffect, useRef, forwardRef } from "react";
 import {
-  Viewer,
-  Ion,
-  Camera,
-  Rectangle,
-  ScreenSpaceEventType,
-  Cartesian3,
   CallbackProperty,
-  StripeMaterialProperty,
+  Camera,
+  Cartesian3,
   Color,
   HeightReference,
-  UrlTemplateImageryProvider,
-  WebMercatorTilingScheme,
+  Ion,
+  Rectangle,
+  ScreenSpaceEventType,
+  StripeMaterialProperty,
+  Viewer,
 } from "cesium";
+import { installPlugins } from "@/utils/index";
+import { forwardRef, useEffect, useRef } from "react";
 import { defaultAccessToken } from "../config";
 const sk = ({
   lng,
@@ -69,7 +68,7 @@ const CesiumViewer = forwardRef<Viewer, CesiumViewerProps>(
   ({ options = {}, className = "" }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewerRef = useRef<Viewer>(null);
-
+    let cleanupPlugins: () => void = () => {};
     useEffect(() => {
       if (containerRef.current) {
         Ion.defaultAccessToken = defaultAccessToken;
@@ -90,9 +89,6 @@ const CesiumViewer = forwardRef<Viewer, CesiumViewerProps>(
         viewerRef.current.cesiumWidget.screenSpaceEventHandler.removeInputAction(
           ScreenSpaceEventType.LEFT_DOUBLE_CLICK
         );
-        // this.map.viewer.scene.debugShowFramesPerSecond = import.meta.env.VITE_IS_PS!
-        // 开启渲染帧率显示
-        // this.map.viewer.scene.debugShowFramesPerSecond = false
         // 开启抗锯齿
         viewerRef.current.scene.postProcessStages.fxaa.enabled = false;
         viewerRef.current.scene.debugShowFramesPerSecond = true;
@@ -100,6 +96,31 @@ const CesiumViewer = forwardRef<Viewer, CesiumViewerProps>(
           // 从以度为单位的经度和纬度值返回笛卡尔3位置。
           destination: Cartesian3.fromDegrees(120.36, 36.09, 10000),
         });
+        // 使用插件
+        cleanupPlugins = installPlugins(viewerRef.current, [
+          //   {
+          //     name: "ClickHandler",
+          //     options: {
+          //       onLeftClick: ({ x, y, Lat, Lon }, pickedObjects) => {
+          //         console.log(x, y, Lat, Lon, pickedObjects); // 处理点击事件的逻辑
+          //       },
+          //       onRightClick: ({ x, y, Lat, Lon }, pickedObjects) => {
+          //         console.log(x, y, Lat, Lon, pickedObjects); // 处理点击事件的逻辑
+          //       },
+          //     },
+          //   },
+          {
+            name: "DrawLine",
+            options: {
+              onDrawEnd: () => {
+                console.log("绘制完成----"); // 处理点击事件的逻辑
+              },
+              deleteDrawing: (viewer, temp, temps) => {
+                console.log(viewer, temp, temps); // 处理点击事件的逻辑
+              },
+            },
+          },
+        ]);
         // 暴露 ref
         if (typeof ref === "function") {
           ref(viewerRef.current);
@@ -114,6 +135,7 @@ const CesiumViewer = forwardRef<Viewer, CesiumViewerProps>(
       }
 
       return () => {
+        cleanupPlugins();
         viewerRef.current?.destroy();
       };
     }, [options, ref]);
