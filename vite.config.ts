@@ -10,6 +10,14 @@ export default defineConfig({
   plugins: [react(), cesium(), tailwindcss(), TanStackRouterVite({ target: 'react', autoCodeSplitting: true })],
   server: {
     open: true,
+    port: 13000,
+    proxy: {
+      '/api': {
+        target: 'https://satelitemap.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    }
   },
   resolve: {
     alias: {
@@ -56,4 +64,5 @@ export default defineConfig({
       },
     },
   },
+
 })

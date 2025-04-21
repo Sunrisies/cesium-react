@@ -1,6 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import CesiumViewer from '@/hooks/useCesium'
-
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent,
 })
@@ -20,7 +19,7 @@ function RouteComponent() {
           sceneModePicker: false, // 显示场景模式切换按钮
           selectionIndicator: false, // 显示选中指示器
           navigationInstructionsInitiallyVisible: false, // 导航说明控件是否显示
-          geocoder: false
+          geocoder: false,
         } }
       />
     </div>
